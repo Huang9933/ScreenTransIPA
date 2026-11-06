@@ -3,11 +3,13 @@ options:
   bundleIdPrefix: com.lh.screentrans
   deploymentTarget:
     iOS: "16.0"
-
 targets:
   ScreenTrans:
     type: application
     platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lh.screentrans.ScreenTrans
     sources:
       - ScreenTrans
     dependencies:
@@ -30,10 +32,12 @@ targets:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-
   BroadcastExtension:
     type: app-extension
     platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lh.screentrans.ScreenTrans.BroadcastExtension
     sources:
       - BroadcastExtension
     info:
