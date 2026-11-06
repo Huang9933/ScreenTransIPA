@@ -1,0 +1,48 @@
+name: ScreenTrans
+options:
+  bundleIdPrefix: com.lh.screentrans
+  deploymentTarget:
+    iOS: "16.0"
+
+targets:
+  ScreenTrans:
+    type: application
+    platform: iOS
+    sources:
+      - ScreenTrans
+    dependencies:
+      - target: BroadcastExtension
+        embed: true
+    info:
+      path: ScreenTrans/Info.plist
+      properties:
+        CFBundleDisplayName: ScreenTrans
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIBackgroundModes:
+          - audio
+          - fetch
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+  BroadcastExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - BroadcastExtension
+    info:
+      path: BroadcastExtension/Info.plist
+      properties:
+        CFBundleDisplayName: ScreenTrans Broadcast
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.broadcast-services-upload
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).SampleHandler
+          RPBroadcastProcessMode: RPBroadcastProcessModeSampleBuffer
