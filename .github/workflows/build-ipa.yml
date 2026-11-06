@@ -17,9 +17,9 @@ jobs:
           brew install xcodegen
           xcodegen generate
 
-      - name: Build Unsigned Release Archive
+      - name: Build App without Validation
         run: |
-          xcodebuild clean build \
+          xcodebuild build \
             -project ScreenTrans.xcodeproj \
             -scheme ScreenTrans \
             -configuration Release \
@@ -27,13 +27,13 @@ jobs:
             -derivedDataPath build_output \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGN_STYLE=Manual
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Package into .ipa
         run: |
+          APP_PATH=$(find build_output/Build/Products/Release-iphoneos -name "ScreenTrans.app" | head -n 1)
           mkdir -p Payload
-          cp -r build_output/Build/Products/Release-iphoneos/ScreenTrans.app Payload/
+          cp -r "$APP_PATH" Payload/
           zip -r9 ScreenTrans_Unsigned.ipa Payload
 
       - name: Upload IPA Artifact
