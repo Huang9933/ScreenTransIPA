@@ -1,0 +1,42 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-ipa:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Generate Xcode Project via XcodeGen
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build Unsigned Release Archive
+        run: |
+          xcodebuild clean build \
+            -project ScreenTrans.xcodeproj \
+            -scheme ScreenTrans \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build_output \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
+
+      - name: Package into .ipa
+        run: |
+          mkdir -p Payload
+          cp -r build_output/Build/Products/Release-iphoneos/ScreenTrans.app Payload/
+          zip -r9 ScreenTrans_Unsigned.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScreenTrans-IPA
+          path: ScreenTrans_Unsigned.ipa
